@@ -223,11 +223,6 @@ class TableManager extends DatabaseConnection
             $data = $this->normalizeData($data);
         }
 
-        if ($filter !== null) {
-            $filter = self::objectToArray($filter);
-            $filter = $this->normalizeData($filter);
-        }
-
         // Validar los datos
         if ($data !== null) {
             foreach ($tables as $table) {
