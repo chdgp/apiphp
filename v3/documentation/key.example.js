@@ -1,3 +1,4 @@
-var USER_PLAY = ''
-var PASS_PLAY = ''
-var FOLDER_PLAY = '/Api-Generador-Php'
+const USER_PLAY = ''
+const PASS_PLAY = ''
+const FOLDER_PLAY = '/apiphp'
+const devtoolsOpen = false
