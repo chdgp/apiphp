@@ -4,19 +4,21 @@
     <meta charset="UTF-8">
     <title>Prueba de Envío de Correo</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 0 20px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; }
-        input, textarea { width: 100%; padding: 8px; margin-bottom: 10px; }
-        button { background: #4CAF50; color: white; padding: 10px 15px; border: none; cursor: pointer; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 16px; max-width: 600px; margin: 20px auto; padding: 0 20px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; transition: border-color 0.3s; }
+        input:focus, textarea:focus { border-color: #4CAF50; outline: none; }
+        button { background: #4CAF50; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: #45a049; }
         #response { margin-top: 20px; padding: 10px; border-radius: 4px; }
         .success { background: #dff0d8; border: 1px solid #d6e9c6; }
         .error { background: #f2dede; border: 1px solid #ebccd1; }
     </style>
 </head>
 <body>
-    <h2>Enviar Correo con Tracking</h2>
-    <h5>NOTA: Eliminar o cambiar el nombre a este archivo por seguridad</h5>
+    <h2 style="text-align:center;">Enviar Correo con Tracking</h2>
+    <h5 style="text-align:center;color:#555;">NOTA: Eliminar o cambiar el nombre a este archivo por seguridad</h5>
     <form id="emailForm">
         <div class="form-group">
             <label for="to">Destinatario:</label>
@@ -30,6 +32,10 @@
             <label for="body">Mensaje:</label>
             <textarea id="body" name="body" rows="6" required></textarea>
         </div>
+        <div class="form-group">
+            <label for="attachment">Adjuntar Archivo:</label>
+            <input type="file" id="attachment" name="attachment" accept="*/*">
+        </div>
         <button type="submit">Enviar Correo</button>
     </form>
     <div id="response"></div>
@@ -39,18 +45,12 @@
         e.preventDefault();
         const form = e.target;
         const responseDiv = document.getElementById('response');
+        const formData = new FormData(form);
         
         try {
             const response = await fetch('send.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    to: form.to.value,
-                    subject: form.subject.value,
-                    body: form.body.value
-                })
+                body: formData
             });
 
             const data = await response.json();

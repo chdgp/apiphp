@@ -4,6 +4,7 @@ chdir(directory: "../../../");
 
 require_once "config/Core/Init.php";
 require_once "config/Core/ConfigurationManager.php";
+require_once "config/Generator/FileManager.php";
 require_once "config/Library/Email/EmailService.php";
 require_once "config/Library/Email/TrackedEmailService.php";
 require_once "config/Library/Email/EmailServicePool.php";
@@ -73,15 +74,9 @@ try {
     </body>
     </html>';
 
-    /*
-    if (file_exists($path) && is_file($path) && is_readable($path) && filesize($path) > 0) {
-        echo "El archivo está listo para ser adjuntado\n";
-        echo "Tamaño: " . filesize($path) . " bytes\n";
-        echo "Tipo MIME: " . mime_content_type($path) . "\n";
-    } else {
-        echo "El archivo no es válido o no se puede acceder a él\n";
-    }
-    */
+    // Verificar si la carpeta 'temp' existe, si no, crearla
+    $fileManager = new FileManager(); // Automatically handles file creation
+    $tempFilePath = $fileManager->getFileUrl();
 
 
     // Enviar el correo
@@ -92,8 +87,11 @@ try {
         true,
         [],   // CC
         [],   // BCC
-        [] //[__DIR__ . '/file.pdf' => 'file_test.pdf']
+        $tempFilePath ? [$tempFilePath => basename($tempFilePath)] : [] 
     );
+
+    // To delete the file later
+    $fileManager->deleteFile();
 
     if (!empty($array)) {
         $response = [
