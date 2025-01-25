@@ -313,6 +313,7 @@ class TableManager extends DatabaseConnection
             }
 
             $obj->data = $result;
+            $obj->count = count($result);
             $obj->resp = !empty($result) ? 'ok' : 'empty';
             $obj->TIME_SECOND = SecurityUtil::timeSecond($this->time);
 
