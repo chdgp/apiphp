@@ -296,7 +296,7 @@ class TableManager extends DatabaseConnection
             $sql .= " ORDER BY " . implode(", ", $orden);
         }
         if ($limit !== null) {
-            $sql .= " LIMIT " . intval($limit);
+            $sql .= " LIMIT ".$limit;
         }
 
         try {
