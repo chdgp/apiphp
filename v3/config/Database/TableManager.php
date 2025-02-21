@@ -191,15 +191,15 @@ class TableManager extends DatabaseConnection
     /**
      * Realiza una consulta SELECT en una o varias tablas de la base de datos.
      *
-     * @param array        $tables       las tablas de las que se seleccionarán los datos
-     * @param array|object $data         los datos para filtrar la consulta
-     * @param array        $filter       filtros adicionales para la consulta
-     * @param array        $customJoins  joins personalizados para la consulta
-     * @param array|null   $subquery     subconsultas para incluir
-     * @param array        $fieldper     campos permitidos en la consulta
-     * @param bool         $alias_activar si se deben usar alias en la consulta
-     * @param int|null     $limit        límite de resultados
-     * @param array|null   $orden        orden de los resultados
+     * @param array                 $tables       las tablas de las que se seleccionarán los datos
+     * @param array|object          $data         los datos para filtrar la consulta
+     * @param array                 $filter       filtros adicionales para la consulta
+     * @param array                 $customJoins  joins personalizados para la consulta
+     * @param array|null            $subquery     subconsultas para incluir
+     * @param array                 $fieldper     campos permitidos en la consulta
+     * @param bool                  $alias_activar si se deben usar alias en la consulta
+     * @param int|null              $limit        límite de resultados
+     * @param array|null|string     $orden        orden de los resultados
      *
      * @return object resultado de la consulta
      */
@@ -292,9 +292,12 @@ class TableManager extends DatabaseConnection
         if (!empty($where_conditions)) {
             $sql .= " WHERE " . implode(" AND ", $where_conditions);
         }
-        if ($orden !== null) {
-            $sql .= " ORDER BY " . implode(", ", $orden);
+
+
+        if (!empty($orden)) {
+            $sql .= " ORDER BY " . (is_array($orden) ? implode(", ", $orden) : $orden);
         }
+        
         if ($limit !== null) {
             $sql .= " LIMIT ".$limit;
         }
@@ -729,5 +732,25 @@ class TableManager extends DatabaseConnection
                 0
             )
         ];
+    }
+
+
+
+
+    /**
+     * Calcula el límite y el offset para la paginación.
+     *
+     * Esta función devuelve el valor que debe ser utilizado en la cláusula LIMIT de una consulta SQL
+     * para implementar la paginación. El número de página se multiplica por la cantidad de registros
+     * por página para calcular el `offset` y el número de registros que se deben mostrar.
+     *
+     * @param int $pagina El número de página que se desea obtener. Debe ser mayor o igual a 1.
+     * @return string El valor del límite en formato 'offset, cantidad' que puede ser utilizado en SQL.
+     */
+    public static function obtenerLimit($pagina) {
+        $registrosPorPagina = 20;  // Número de registros por página
+        $offset = ($pagina - 1) * $registrosPorPagina;  // Cálculo del offset
+    
+        return "$offset, $registrosPorPagina";  // Retorna el límite en formato 'offset, cantidad'
     }
 }
