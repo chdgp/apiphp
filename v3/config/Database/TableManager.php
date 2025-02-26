@@ -277,11 +277,24 @@ class TableManager extends DatabaseConnection
             foreach ($filter as $condition) {
                 if (isset($condition['field'], $condition['value'])) {
                     $operator = $condition['operator'] ?? '=';
-                    $where_conditions[] = "{$condition['field']} $operator ?";
-                    $values[] = $condition['value'];
+        
+                    if ($operator === 'IN' && is_array($condition['value'])) {
+                        // Si el operador es IN, la condición necesita ser manejada de forma especial.
+                        $placeholders = implode(',', array_fill(0, count($condition['value']), '?'));
+                        $where_conditions[] = "{$condition['field']} IN ($placeholders)";
+                        $values = array_merge($values, $condition['value']);
+                    } elseif ($operator === 'IS NULL' || $operator === 'IS NOT NULL') {
+                        // Si el operador es IS NULL o IS NOT NULL, no agregamos valores.
+                        $where_conditions[] = "{$condition['field']} $operator";
+                    } else {
+                        // Para otros operadores, se mantiene el comportamiento estándar
+                        $where_conditions[] = "{$condition['field']} $operator ?";
+                        $values[] = $condition['value'];
+                    }
                 }
             }
         }
+        
 
         // Agregar subconsultas
         if ($subquery !== null) {
