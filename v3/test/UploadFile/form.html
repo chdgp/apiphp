@@ -4,171 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subir Archivo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Estilos Generales */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-            font-size: 2rem;
-            margin-bottom: 20px;
-        }
-
-        .container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-            padding: 30px;
-            box-sizing: border-box;
-        }
-
-        /* Estilo para los grupos de formulario */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            font-size: 1rem;
-            color: #555;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 10px;
-            font-size: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            border-color: #5c9ded;
-            outline: none;
-        }
-
-        .form-group input[type="file"] {
-            padding: 5px;
-            font-size: 1rem;
-        }
-
-        /* Estilo para los botones */
-        button[type="submit"] {
-            background-color: #5c9ded;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
-
-        button[type="submit"]:hover {
-            background-color: #4a8cdb;
-        }
-
-        /* Estilo para las opciones de imagen */
-        .image-options {
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            display: none;
-        }
-
-        .image-options h3 {
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-            color: #333;
-        }
-
-        .image-options label {
-            font-size: 1rem;
-            color: #555;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .image-options input[type="checkbox"] {
-            margin-right: 10px;
-        }
-
-        /* Estilo de error y éxito */
-        .error, .success {
-            display: none;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 4px;
-            text-align: center;
-        }
-
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        /* Estilo para la vista previa */
-        .preview {
-            max-width: 100%;
-            margin-top: 15px;
-            display: none;
-            border-radius: 4px;
-        }
-
-        /* Contenedor para el resultado final */
-        .result-container {
-            margin-top: 30px;
-        }
-
-        .file-link {
-            color: #007bff;
-            text-decoration: none;
-            font-size: 0.9rem;
-            word-wrap: break-word;
-        }
-
-        .file-link:hover {
-            text-decoration: underline;
-        }
+.form-group,h2{margin-bottom:1.5rem}.btn,.preview-container,h2{text-align:center}.container,.preview{box-shadow:var(--box-shadow)}.btn:hover,.copy-btn:hover{background-color:var(--primary-hover)}:root{--primary-color:#4361ee;--primary-hover:#3a56d4;--secondary-color:#f0f2f5;--text-color:#333;--border-color:#ddd;--success-color:#4ade80;--error-color:#ef4444;--border-radius:8px;--box-shadow:0 4px 12px rgba(0, 0, 0, 0.1)}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',Roboto,'Helvetica Neue',sans-serif;background-color:var(--secondary-color);color:var(--text-color);line-height:1.6;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}h2{font-size:1.8rem;color:var(--primary-color)}.container{background-color:#fff;border-radius:var(--border-radius);width:100%;max-width:650px;padding:2rem}.form-group{position:relative}.form-group label{font-size:.95rem;font-weight:500;display:block;margin-bottom:8px;color:#555}.form-group input,.form-group select{width:100%;padding:.75rem 1rem;font-size:1rem;border:1px solid var(--border-color);border-radius:var(--border-radius);transition:.3s}.form-group input:focus,.form-group select:focus{border-color:var(--primary-color);box-shadow:0 0 0 2px rgba(67,97,238,.2);outline:0}.file-upload-container{position:relative;border:2px dashed var(--border-color);border-radius:var(--border-radius);padding:2rem 1rem;text-align:center;transition:.3s;cursor:pointer}.file-upload-container:hover{border-color:var(--primary-color)}.file-upload-container i{font-size:2.5rem;color:var(--primary-color);margin-bottom:1rem}.file-upload-text{font-size:1rem;margin-bottom:.5rem}.file-upload-container input[type=file]{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer}.file-info{margin-top:1rem;padding:.75rem;background-color:#f8f9fa;border-radius:var(--border-radius);display:none}.file-info-content{display:flex;align-items:center;gap:10px}.file-info-icon{font-size:1.5rem;color:var(--primary-color)}.file-info-details{flex-grow:1}.file-info-name{font-weight:500;word-break:break-all}.file-info-meta{font-size:.85rem;color:#666}.btn{display:inline-block;background-color:var(--primary-color);color:#fff;border:none;padding:.75rem 1.5rem;font-size:1rem;border-radius:var(--border-radius);cursor:pointer;transition:background-color .3s,transform .2s;font-weight:500;width:100%}.image-options,.message,.preview{border-radius:var(--border-radius)}.btn:hover{transform:translateY(-2px)}.btn:active{transform:translateY(0)}.btn-icon{margin-right:.5rem}.image-options{padding:1.25rem;background-color:#f8f9fa;margin-bottom:1.5rem;display:none}.image-options h3{margin-bottom:1rem;font-size:1.1rem;color:var(--text-color)}.checkbox-group{display:flex;align-items:center;margin-bottom:.75rem}.checkbox-group input[type=checkbox]{margin-right:10px;width:16px;height:16px}.preview-container{margin-top:1rem;display:none}.preview{max-width:100%;max-height:200px}.message{padding:.75rem 1rem;margin:1rem 0;align-items:center;display:none}.message i{margin-right:.75rem;font-size:1.25rem}.success{background-color:rgba(74,222,128,.2);color:#166534;border-left:4px solid var(--success-color)}.error{background-color:rgba(239,68,68,.2);color:#b91c1c;border-left:4px solid var(--error-color)}.result-container{margin-top:1.5rem;display:none}.result-heading{font-size:1.1rem;margin-bottom:1rem;color:var(--text-color)}.result-item{border:1px solid var(--border-color);border-radius:var(--border-radius);padding:1rem;margin-bottom:1rem;background-color:#f8f9fa}.result-title{font-weight:500;margin-bottom:.5rem;color:var(--primary-color)}.result-image{max-width:100%;border-radius:4px;margin-bottom:.75rem}.url-group{display:flex;align-items:center;background-color:#fff;border:1px solid var(--border-color);border-radius:4px;padding:.5rem;margin-bottom:.75rem}.url-text{flex-grow:1;font-size:.9rem;padding:.25rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#555}.copy-btn{background-color:var(--primary-color);color:#fff;border:none;padding:.4rem .75rem;font-size:.85rem;border-radius:4px;cursor:pointer;margin-left:.5rem;white-space:nowrap;transition:background-color .3s}@media (max-width:768px){.container{padding:1.5rem}h2{font-size:1.5rem}.file-upload-container{padding:1.5rem 1rem}.file-upload-container i{font-size:2rem}}@media (max-width:480px){body{padding:10px}.container{padding:1.2rem}.btn{padding:.65rem 1.25rem}.file-info-content{flex-direction:column;align-items:flex-start}.url-group{flex-direction:column}.copy-btn{margin-left:0;margin-top:.5rem;width:100%}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.animate-fade{animation:.3s ease-in-out fadeIn}
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Subir Archivo</h2>
+        <h2><i class="fas fa-cloud-upload-alt"></i> Subir Archivo</h2>
+        
         <form id="uploadForm" action="process_file.php" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <label for="file">Seleccionar archivo:</label>
-                <input type="file" id="file" name="file" required>
-                <div class="file-info"></div>
+                <div class="file-upload-container" id="dropArea">
+                    <i class="fas fa-file-upload"></i>
+                    <div class="file-upload-text">Haz clic o arrastra un archivo aquí</div>
+                    <div class="file-upload-subtext">Formatos soportados: JPG, PNG, PDF, DOC, etc.</div>
+                    <input type="file" id="file" name="file" required>
+                </div>
+                
+                <div class="file-info" id="fileInfo">
+                    <div class="file-info-content">
+                        <div class="file-info-icon">
+                            <i class="fas fa-file"></i>
+                        </div>
+                        <div class="file-info-details">
+                            <div class="file-info-name" id="fileName">archivo.jpg</div>
+                            <div class="file-info-meta" id="fileDetails">Tipo: image/jpeg, Tamaño: 2.5 MB</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="preview-container" id="previewContainer">
+                    <img id="preview" class="preview" alt="Vista previa">
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="userId">ID de Usuario:</label>
+                <label for="userId"><i class="fas fa-user"></i> ID de App:</label>
                 <input type="number" id="userId" name="userId" required>
             </div>
 
             <div class="form-group">
-                <label for="folder">Carpeta destino:</label>
+                <label for="folder"><i class="fas fa-folder"></i> Carpeta destino:</label>
                 <select id="folder" name="folder">
                     <option value="files">Archivos generales</option>
                     <option value="image">Imágenes</option>
@@ -179,50 +57,83 @@
 
             <!-- Opciones específicas para imágenes -->
             <div id="imageOptions" class="image-options">
-                <h3>Opciones de imagen</h3>
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" name="createWebp" checked> Crear versión WebP
-                    </label>
+                <h3><i class="fas fa-cog"></i> Opciones de imagen</h3>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="createWebp" name="createWebp" checked>
+                    <label for="createWebp">Crear versión WebP (mejor compresión)</label>
                 </div>
 
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" name="saveOriginal"> Guardar original
-                    </label>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="saveOriginal" name="saveOriginal" checked>
+                    <label for="saveOriginal">Guardar archivo original</label>
                 </div>
-
-                <img id="preview" class="preview" alt="Vista previa">
             </div>
 
             <div class="form-group">
-                <button type="submit">Subir Archivo</button>
+                <button type="submit" class="btn">
+                    <i class="fas fa-upload btn-icon"></i> Subir Archivo
+                </button>
             </div>
         </form>
 
-        <div id="success" class="success">
-            Archivo subido correctamente
+        <div id="successMessage" class="message success">
+            <i class="fas fa-check-circle"></i>
+            <span>¡Archivo subido correctamente!</span>
+        </div>
+        
+        <div id="errorMessage" class="message error">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="errorText">Error al subir el archivo</span>
         </div>
 
-        <div id="resultContainer" class="result-container"></div>
+        <div id="resultContainer" class="result-container">
+            <h3 class="result-heading"><i class="fas fa-link"></i> Enlaces disponibles</h3>
+            <div id="resultContent"></div>
+        </div>
     </div>
-</body>
-</html>
-
 
     <script>
+        // Constantes y elementos DOM
         const imageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         const fileInput = document.getElementById('file');
+        const dropArea = document.getElementById('dropArea');
         const imageOptions = document.getElementById('imageOptions');
         const preview = document.getElementById('preview');
-        const fileInfo = document.querySelector('.file-info');
+        const previewContainer = document.getElementById('previewContainer');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const fileDetails = document.getElementById('fileDetails');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultContent = document.getElementById('resultContent');
 
-        fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
+        // Función para mostrar información del archivo
+        function handleFileSelect(file) {
             if (!file) return;
 
-            // Mostrar información del archivo
-            fileInfo.textContent = `Tipo: ${file.type || 'desconocido'}, Tamaño: ${formatFileSize(file.size)}`;
+            // Actualizar la información del archivo
+            fileName.textContent = file.name;
+            fileDetails.textContent = `Tipo: ${file.type || 'desconocido'}, Tamaño: ${formatFileSize(file.size)}`;
+            fileInfo.style.display = 'block';
+            fileInfo.classList.add('animate-fade');
+
+            // Mostrar el icono del tipo de archivo adecuado
+            const fileIcon = fileInfo.querySelector('.file-info-icon i');
+            if (file.type.includes('image')) {
+                fileIcon.className = 'fas fa-file-image';
+            } else if (file.type.includes('pdf')) {
+                fileIcon.className = 'fas fa-file-pdf';
+            } else if (file.type.includes('word') || file.type.includes('document')) {
+                fileIcon.className = 'fas fa-file-word';
+            } else if (file.type.includes('excel') || file.type.includes('sheet')) {
+                fileIcon.className = 'fas fa-file-excel';
+            } else if (file.type.includes('zip') || file.type.includes('compressed')) {
+                fileIcon.className = 'fas fa-file-archive';
+            } else {
+                fileIcon.className = 'fas fa-file';
+            }
 
             // Si es una imagen, mostrar opciones y vista previa
             if (imageTypes.includes(file.type)) {
@@ -231,15 +142,21 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     preview.src = e.target.result;
-                    preview.style.display = 'block';
+                    previewContainer.style.display = 'block';
+                    previewContainer.classList.add('animate-fade');
                 };
                 reader.readAsDataURL(file);
             } else {
                 imageOptions.style.display = 'none';
-                preview.style.display = 'none';
+                previewContainer.style.display = 'none';
             }
-        });
 
+            // Actualizar estilo del área de arrastre
+            dropArea.style.borderStyle = 'solid';
+            dropArea.style.backgroundColor = '#f0f9ff';
+        }
+
+        // Formatear tamaño del archivo
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 Bytes';
             const k = 1024;
@@ -248,9 +165,74 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
+        // Event listeners para drag and drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            dropArea.style.borderColor = '#4361ee';
+            dropArea.style.backgroundColor = '#eff6ff';
+        }
+
+        function unhighlight() {
+            dropArea.style.borderColor = '#ddd';
+            dropArea.style.backgroundColor = '';
+        }
+
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const file = dt.files[0];
+            fileInput.files = dt.files;
+            handleFileSelect(file);
+        }
+
+        // Event listener para selección de archivo
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            handleFileSelect(file);
+        });
+
+        // Función para copiar al portapapeles
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '¡Copiado!';
+                button.style.backgroundColor = '#4ade80';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.backgroundColor = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Error al copiar texto: ', err);
+            });
+        }
+
+        // Manejo del envío del formulario
         document.getElementById('uploadForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Ocultar mensajes anteriores
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Crear y enviar FormData
             const formData = new FormData(this);
             
             fetch('process_file.php', {
@@ -259,42 +241,110 @@
             })
             .then(response => response.json())
             .then(data => {
-                const success = document.getElementById('success');
-                const resultContainer = document.getElementById('resultContainer');
-                
                 if (data.resp === 'add_file_create' || data.resp === 'file_uploaded') {
-                    success.style.display = 'block';
-                    resultContainer.innerHTML = '';
+                    // Mostrar mensaje de éxito
+                    successMessage.style.display = 'flex';
+                    successMessage.classList.add('animate-fade');
                     
+                    // Mostrar resultados
+                    resultContainer.style.display = 'block';
+                    resultContainer.classList.add('animate-fade');
+                    resultContent.innerHTML = '';
+                    
+                    // Crear elementos para mostrar resultados
                     if (data.original) {
+                        const originalItem = document.createElement('div');
+                        originalItem.className = 'result-item';
+                        
+                        const originalTitle = document.createElement('div');
+                        originalTitle.className = 'result-title';
+                        originalTitle.textContent = 'Archivo Original';
+                        originalItem.appendChild(originalTitle);
+                        
                         // Si es una imagen, mostrarla
                         if (imageTypes.includes(data.type)) {
                             const originalImg = document.createElement('img');
                             originalImg.src = data.original;
                             originalImg.alt = 'Archivo Original';
-                            resultContainer.appendChild(originalImg);
+                            originalImg.className = 'result-image';
+                            originalItem.appendChild(originalImg);
                         }
-                        // Mostrar enlace al archivo
-                        const link = document.createElement('a');
-                        link.href = data.original;
-                        link.textContent = 'Descargar archivo original';
-                        link.className = 'file-link';
-                        resultContainer.appendChild(link);
+                        
+                        // Crear grupo de URL y botón de copia
+                        const urlGroup = document.createElement('div');
+                        urlGroup.className = 'url-group';
+                        
+                        const urlText = document.createElement('div');
+                        urlText.className = 'url-text';
+                        urlText.textContent = data.original;
+                        
+                        const copyBtn = document.createElement('button');
+                        copyBtn.className = 'copy-btn';
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copiar URL';
+                        copyBtn.onclick = function() {
+                            copyToClipboard(data.original, this);
+                        };
+                        
+                        urlGroup.appendChild(urlText);
+                        urlGroup.appendChild(copyBtn);
+                        originalItem.appendChild(urlGroup);
+                        
+                        resultContent.appendChild(originalItem);
                     }
                     
                     if (data.webp) {
+                        const webpItem = document.createElement('div');
+                        webpItem.className = 'result-item';
+                        
+                        const webpTitle = document.createElement('div');
+                        webpTitle.className = 'result-title';
+                        webpTitle.textContent = 'Versión WebP (Optimizada)';
+                        webpItem.appendChild(webpTitle);
+                        
                         const webpImg = document.createElement('img');
                         webpImg.src = data.webp;
                         webpImg.alt = 'Versión WebP';
-                        resultContainer.appendChild(webpImg);
+                        webpImg.className = 'result-image';
+                        webpItem.appendChild(webpImg);
+                        
+                        // Crear grupo de URL y botón de copia
+                        const urlGroup = document.createElement('div');
+                        urlGroup.className = 'url-group';
+                        
+                        const urlText = document.createElement('div');
+                        urlText.className = 'url-text';
+                        urlText.textContent = data.webp;
+                        
+                        const copyBtn = document.createElement('button');
+                        copyBtn.className = 'copy-btn';
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copiar URL';
+                        copyBtn.onclick = function() {
+                            copyToClipboard(data.webp, this);
+                        };
+                        
+                        urlGroup.appendChild(urlText);
+                        urlGroup.appendChild(copyBtn);
+                        webpItem.appendChild(urlGroup);
+                        
+                        resultContent.appendChild(webpItem);
                     }
+                    
+                    // Desplazar a los resultados
+                    resultContainer.scrollIntoView({ behavior: 'smooth' });
                 } else {
-                    alert('Error: ' + (data.error || data.resp));
+                    // Mostrar mensaje de error
+                    errorText.textContent = data.error || data.resp || 'Error desconocido al subir el archivo';
+                    errorMessage.style.display = 'flex';
+                    errorMessage.classList.add('animate-fade');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error al subir el archivo');
+                errorText.textContent = 'Error al conectar con el servidor';
+                errorMessage.style.display = 'flex';
+                errorMessage.classList.add('animate-fade');
             });
         });
     </script>
+</body>
+</html>
