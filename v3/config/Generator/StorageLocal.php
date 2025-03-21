@@ -217,9 +217,39 @@ class StorageLocal
             // Decodificar y procesar imagen
             $base64Data = explode(',', $base64string);
             $fileContents = base64_decode($base64Data[1], true);
+            $mimeType = '';
+        
+            // Extraer tipo MIME de la cadena base64
+            if (isset($base64Data[0])) {
+                preg_match('/data:([^;]+)/', $base64Data[0], $matches);
+                if (isset($matches[1])) {
+                    $mimeType = $matches[1];
+                }
+            }
+
 
             if ($fileContents === false) {
                 throw new Exception("Invalid base64 encoding");
+            }
+
+            // Procesar SVG
+            if ($mimeType === 'image/svg+xml') {
+                // Para SVG, simplemente guardamos el archivo original
+                $originalPath = $storagePath . '/original';
+                self::createDirectory($originalPath);
+                
+                $filePath = $originalPath . '/' . $randon . '_' . $idusuario . '_' . date('Ymd') . '.svg';
+                
+                if (!file_put_contents($filePath, $fileContents)) {
+                    throw new Exception("Failed to save SVG file");
+                }
+                
+                return (object) [
+                    'original' => $_DOMINIO . '/' . $filePath,
+                    'webp' => $_DOMINIO . '/' . $filePath, // Para SVG, usamos el mismo archivo como "webp"
+                    'resp' => 'add_file_create',
+                    'type' => 'image/svg+xml'
+                ];
             }
 
             $image_info = @getimagesizefromstring($fileContents);
@@ -307,7 +337,7 @@ class StorageLocal
             $extension = isset($fileParts['extension']) ? strtolower($fileParts['extension']) : '';
 
             // Restricciones de tipos de archivo permitidos
-            $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'docx', 'xlsx', 'xls', 'csv', 'doc', 'txt', 'webp', 'ppt', 'pptx', 'xml']; // Añadir más extensiones según sea necesario
+            $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'docx', 'xlsx', 'xls', 'csv', 'doc', 'txt', 'webp', 'ppt', 'pptx', 'xml','svg']; // Añadir más extensiones según sea necesario
             if (!in_array($extension, $allowedExtensions)) {
                 throw new Exception('Invalid file type. Only images and documents are allowed.');
             }
