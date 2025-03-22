@@ -87,7 +87,7 @@ try {
         true,
         [],   // CC
         [],   // BCC
-        $tempFilePath ? [$tempFilePath => basename($tempFilePath)] : [] 
+        $tempFilePath ? [$tempFilePath => basename($tempFilePath)] : []
     );
 
     // To delete the file later
@@ -106,7 +106,6 @@ try {
     } else {
         sendJsonResponse(false, [], 'Error al enviar el correo', 500);
     }
-
 } catch (Exception $e) {
     sendJsonResponse(false, [], 'Error interno del servidor: ' . $e->getMessage(), 500);
 }
@@ -114,11 +113,11 @@ try {
 
 /**
  * Usando cURL:
- *  curl -X POST http://tudominio.com/v3/config/test/Email/send.php \
- * -H "Content-Type: application/json" \
- * -d '{
- *     "to": "destinatario@email.com",
- *     "subject": "Prueba de correo con tracking",
- *     "body": "<p>Este es un correo de prueba con <strong>tracking</strong> incluido.</p>"
- * }'
+   curl -X POST http://tudominio.com/v3/config/test/Email/send.php \
+  -H "Content-Type: application/json" \
+  -d '{
+      "to": "destinatario@email.com",
+      "subject": "Prueba de correo con tracking",
+      "body": "<p>Este es un correo de prueba con <strong>tracking</strong> incluido.</p>"
+  }'
  */
