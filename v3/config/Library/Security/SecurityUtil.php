@@ -258,12 +258,13 @@ class SecurityUtil
 
         // Generate rows
         foreach ($data as $row) {
-            $html .= '<tr>';
+            $html .= sprintf("<tr data-json='%s'>", json_encode($row));
             foreach ($columnMap as $th => $columnValue) {
                 $value = is_callable($columnValue)
                     ? $columnValue($row)
-                    : $row->$columnValue;
-                $html .= sprintf('<td>%s</td>', htmlspecialchars($value));
+                    : $row[$columnValue];
+
+                $html .= sprintf('<td data-key="%s">%s</td>', $columnValue, htmlspecialchars( (string) $value));
             }
             $html .= '</tr>';
         }

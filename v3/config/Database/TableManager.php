@@ -604,9 +604,24 @@ class TableManager extends DatabaseConnection
             return "$key = ?";
         }, array_keys($valid_where)));
 
-        $stmt = $adb->prepare("DELETE FROM $table_name WHERE $where_clause");
-        $stmt->execute(array_values($valid_where));
-        $obj->resp = ($obj->count = $stmt->rowCount()) ? 'dele' : 'no_registro';
+        try {
+            $stmt = $adb->prepare("DELETE FROM $table_name WHERE $where_clause");
+            $stmt->execute(array_values($valid_where));
+            $obj->resp = ($obj->count = $stmt->rowCount()) ? 'dele' : 'no_registro';
+        } catch (PDOException $e) {
+            // Comprobamos si el error es por violación de clave foránea
+            if ($e->getCode() == 23000) {
+                $obj->resp = 'error_integrity_constraint';
+                $obj->code_err = $e->getCode();
+                $obj->message = 'No se puede eliminar el registro porque existe una relación de clave foránea que lo impide.';
+            } else {
+                // Si es otro tipo de error, lo mostramos
+                $obj->resp = 'error';
+                $obj->code_err = $e->getCode();
+                $obj->message = $e->getMessage();
+            }
+        }
+
         $obj->TIME_SECOND = SecurityUtil::timeSecond($this->time);
 
         $adb = null;
