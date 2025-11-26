@@ -189,6 +189,102 @@ class TableManager extends DatabaseConnection
     }
 
     /**
+     * Construye filtros avanzados para consultas SQL
+     * example:
+     * $filters = [
+     *   ['field' => 'status', 'operator' => '=', 'value' => 'active'],
+     *  ['field' => 'price', 'operator' => 'BETWEEN', 'value' => [100, 500]],
+     *  ['field' => 'category', 'operator' => 'IN', 'value' => ['A', 'B', 'C']],
+     *  ['field' => 'name', 'operator' => 'LIKE', 'value' => 'john'],
+     *  ['field' => 'deleted_at', 'operator' => 'IS NULL'],
+     *  ['OR' => [
+     *     ['field' => 'type', 'operator' => '=', 'value' => 'premium'],
+     *    ['field' => 'type', 'operator' => '=', 'value' => 'standard']
+     *  ]
+     * ];
+     *
+     * @param array $filters filtros avanzados
+     * @return array
+     */
+    private function buildAdvancedFilter(array $filters): array
+    {
+        $conditions = [];
+        $values = [];
+
+        foreach ($filters as $filter) {
+            // 🔹 Si el filtro tiene una agrupación lógica (OR o AND)
+            if (isset($filter['AND']) || isset($filter['OR'])) {
+                $logic = isset($filter['OR']) ? 'OR' : 'AND';
+                $group = $filter[$logic];
+
+                // Llamada recursiva para subgrupos
+                $sub = $this->buildAdvancedFilter($group);
+
+                if (!empty($sub['conditions'])) {
+                    $conditions[] = '(' . implode(" $logic ", $sub['conditions']) . ')';
+                    $values = array_merge($values, $sub['values']);
+                }
+
+                continue;
+            }
+
+            // 🔹 Validar campos básicos
+            if (!isset($filter['field'], $filter['operator'])) {
+                continue;
+            }
+
+            $field = $filter['field'];
+            $operator = strtoupper(trim($filter['operator']));
+            $value = $filter['value'] ?? null;
+
+            switch ($operator) {
+                case 'IN':
+                case 'NOT IN':
+                    if (is_array($value) && !empty($value)) {
+                        $placeholders = implode(',', array_fill(0, count($value), '?'));
+                        $conditions[] = "$field $operator ($placeholders)";
+                        $values = array_merge($values, $value);
+                    }
+                    break;
+
+                case 'BETWEEN':
+                case 'NOT BETWEEN':
+                    if (is_array($value) && count($value) === 2) {
+                        $conditions[] = "$field $operator ? AND ?";
+                        $values[] = $value[0];
+                        $values[] = $value[1];
+                    }
+                    break;
+
+                case 'IS NULL':
+                case 'IS NOT NULL':
+                    $conditions[] = "$field $operator";
+                    break;
+
+                case 'LIKE':
+                case 'NOT LIKE':
+                    // Si no incluye comodines %, los agregamos automáticamente
+                    $pattern = (strpos($value, '%') === false) ? "%$value%" : $value;
+                    $conditions[] = "$field $operator ?";
+                    $values[] = $pattern;
+                    break;
+
+                default:
+                    // Operadores estándar (=, !=, >, <, >=, <=, etc.)
+                    $conditions[] = "$field $operator ?";
+                    $values[] = $value;
+                    break;
+            }
+        }
+
+        return [
+            'conditions' => $conditions,
+            'values' => $values
+        ];
+    }
+
+
+    /**
      * Realiza una consulta SELECT en una o varias tablas de la base de datos.
      *
      * @param array                 $tables       las tablas de las que se seleccionarán los datos
@@ -272,29 +368,14 @@ class TableManager extends DatabaseConnection
             $values = array_merge($values, $whereResult['values']);
         }
 
-        // Agregar filtros adicionales
-        if ($filter !== null) {
-            foreach ($filter as $condition) {
-                if (isset($condition['field'], $condition['value'])) {
-                    $operator = $condition['operator'] ?? '=';
-        
-                    if ($operator === 'IN' && is_array($condition['value'])) {
-                        // Si el operador es IN, la condición necesita ser manejada de forma especial.
-                        $placeholders = implode(',', array_fill(0, count($condition['value']), '?'));
-                        $where_conditions[] = "{$condition['field']} IN ($placeholders)";
-                        $values = array_merge($values, $condition['value']);
-                    } elseif ($operator === 'IS NULL' || $operator === 'IS NOT NULL') {
-                        // Si el operador es IS NULL o IS NOT NULL, no agregamos valores.
-                        $where_conditions[] = "{$condition['field']} $operator";
-                    } else {
-                        // Para otros operadores, se mantiene el comportamiento estándar
-                        $where_conditions[] = "{$condition['field']} $operator ?";
-                        $values[] = $condition['value'];
-                    }
-                }
+        // Agregar filtros adicionales con soporte avanzado
+        if (!empty($filter)) {
+            $filterResult = $this->buildAdvancedFilter($filter);
+            if (!empty($filterResult['conditions'])) {
+                $where_conditions = array_merge($where_conditions, $filterResult['conditions']);
+                $values = array_merge($values, $filterResult['values']);
             }
         }
-        
 
         // Agregar subconsultas
         if ($subquery !== null) {
@@ -310,9 +391,9 @@ class TableManager extends DatabaseConnection
         if (!empty($orden)) {
             $sql .= " ORDER BY " . (is_array($orden) ? implode(", ", $orden) : $orden);
         }
-        
+
         if ($limit !== null) {
-            $sql .= " LIMIT ".$limit;
+            $sql .= " LIMIT " . $limit;
         }
 
         try {
@@ -332,7 +413,6 @@ class TableManager extends DatabaseConnection
             $obj->count = count($result);
             $obj->resp = !empty($result) ? 'ok' : 'empty';
             $obj->TIME_SECOND = SecurityUtil::timeSecond($this->time);
-
         } catch (PDOException $e) {
             $obj->msj = "Error en la consulta: " . $e->getMessage();
             $obj->resp = 'err';
@@ -553,7 +633,6 @@ class TableManager extends DatabaseConnection
         $obj->TIME_SECOND = SecurityUtil::timeSecond($this->time);
 
         $adb = null;
-
         return $obj;
     }
 
@@ -775,10 +854,11 @@ class TableManager extends DatabaseConnection
      * @param int $pagina El número de página que se desea obtener. Debe ser mayor o igual a 1.
      * @return string El valor del límite en formato 'offset, cantidad' que puede ser utilizado en SQL.
      */
-    public static function obtenerLimit($pagina) {
+    public static function obtenerLimit($pagina)
+    {
         $registrosPorPagina = 20;  // Número de registros por página
         $offset = ($pagina - 1) * $registrosPorPagina;  // Cálculo del offset
-    
+
         return "$offset, $registrosPorPagina";  // Retorna el límite en formato 'offset, cantidad'
     }
 }

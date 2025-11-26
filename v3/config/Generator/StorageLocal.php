@@ -173,6 +173,7 @@ class StorageLocal
     ): object {
 
 
+        #util::save_log('createStorageAndImageBase64', $base64string);
 
         // Validar URL
         if (!empty($base64string) && filter_var($base64string, FILTER_VALIDATE_URL)) {
@@ -206,6 +207,7 @@ class StorageLocal
                 self::STORAGE_PATH . $folder . '/' . date('Y') . '/' . date('m')
             ];
 
+            #util::save_log('createStorageAndImageBase64', $paths);
 
             $storagePath = end($paths);
             foreach ($paths as $path) {
@@ -243,6 +245,7 @@ class StorageLocal
                 if (!file_put_contents($filePath, $fileContents)) {
                     throw new Exception("Failed to save SVG file");
                 }
+            #util::save_log('createStorageAndImageBase64', $filePath);
                 
                 return (object) [
                     'original' => $_DOMINIO . '/' . $filePath,
@@ -307,6 +310,8 @@ class StorageLocal
 
                     $result['original'] = $_DOMINIO . '/' . $filePath;
                 }
+                
+                #util::save_log('createStorageAndImageBase64', $result);
 
                 return (object) array_merge($result, ['resp' => 'add_file_create']);
 
